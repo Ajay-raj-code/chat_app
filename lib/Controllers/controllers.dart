@@ -10,5 +10,13 @@ class SearchListController extends GetxController{
 }
 
 class ObsecureController extends GetxController{
-  RxBool obsecure = true.obs;
+  bool obsecure = true;
+  void updateObsecure(){
+    obsecure = !obsecure;
+    update();
+  }
+}
+
+class SendController extends GetxController{
+  RxBool status = false.obs;
 }

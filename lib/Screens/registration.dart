@@ -13,6 +13,8 @@ class Registration extends StatefulWidget{
 }
 
 class _RegistrationState extends State<Registration> {
+  final ObsecureController controller1 = Get.put(ObsecureController());
+
   final TextEditingController _nameController= TextEditingController();
 
   final TextEditingController _emailController= TextEditingController();
@@ -28,6 +30,7 @@ class _RegistrationState extends State<Registration> {
   @override
   void dispose() {
     // TODO: implement dispose
+    controller1.dispose();
     _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
@@ -63,14 +66,12 @@ class _RegistrationState extends State<Registration> {
                     customName(controller: _nameController),
                     customEmail(controller: _emailController),
                     customMobileNumber(controller: _mobileNumberController),
-                    GetBuilder<ObsecureController>(builder: (controller) =>                     customPassword(controller: _passwordController, obscure: controller.obsecure.value, title: "Password", obsecureTap: () {
-                      controller.obsecure.value = !controller.obsecure.value;
-
+                    GetBuilder<ObsecureController>(builder: (controller) =>                     customPassword(controller: _passwordController, obscure: controller.obsecure, title: "Password", obsecureTap: () {
+                      controller.updateObsecure();
                     },),
                         ),
-                    GetBuilder<ObsecureController>(builder: (controller) => customPassword(controller: _confirmPasswordController, obscure: controller.obsecure.value, title: "Confirm Password", obsecureTap: () {
-                      controller.obsecure.value = !controller.obsecure.value;
-
+                    GetBuilder<ObsecureController>(builder: (controller) => customPassword(controller: _confirmPasswordController, obscure: controller.obsecure, title: "Confirm Password", obsecureTap: () {
+controller.updateObsecure();
                     },),),
                   ],
                 )),

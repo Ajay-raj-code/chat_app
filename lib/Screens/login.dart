@@ -14,15 +14,16 @@ class Login extends StatefulWidget{
 
 class _LoginState extends State<Login> {
   final TextEditingController _emailController= TextEditingController();
+  final ObsecureController controller = Get.put(ObsecureController());
 
   final TextEditingController _passwordController = TextEditingController();
 
-  final obsecureController = Get.put(ObsecureController());
 
   final _formKey = GlobalKey<FormState>();
 @override
   void dispose() {
     // TODO: implement dispose
+  controller.dispose();
   _emailController.dispose();
   _passwordController.dispose();
     super.dispose();
@@ -50,9 +51,10 @@ top:  false,
 
                      children: [
                  customEmail(controller: _emailController),
-                 Obx(() => customPassword(controller: _passwordController, obscure: obsecureController.obsecure.value, title: "Password", obsecureTap: () {
-                   obsecureController.obsecure.value = !obsecureController.obsecure.value;
-                 },),),
+                GetBuilder<ObsecureController>(builder: (controller) =>                customPassword(controller: _passwordController, obscure: controller.obsecure, title: "Password", obsecureTap: () {
+                  controller.updateObsecure();
+                } ),
+                    ),
                ],)),
              ),
              customButton(title: "Login", onTap: () async{

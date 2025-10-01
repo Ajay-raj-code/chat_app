@@ -1,3 +1,4 @@
+import 'package:chat/Controllers/controllers.dart';
 import 'package:chat/Database/authentication.dart';
 import 'package:chat/Database/chat_cloud.dart';
 import 'package:chat/Utils/helper.dart';
@@ -7,7 +8,7 @@ import 'package:get/get.dart';
 
 class ChatPage extends StatefulWidget{
 
-  ChatPage({super.key});
+  const ChatPage({super.key});
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -17,8 +18,9 @@ class _ChatPageState extends State<ChatPage> {
   final args = Get.arguments as Map<String, dynamic>;
   final String uid1 = Authentication().user!.uid;
   final TextEditingController _controller = TextEditingController();
-  late String chatId;
   final database = FirebaseDatabase.instance.ref();
+  final SendController _sendController = Get.put(SendController());
+  late String chatId;
 
   @override
   void dispose() {
@@ -86,38 +88,33 @@ class _ChatPageState extends State<ChatPage> {
             final isMe = message['senderId'] == uid1;
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 5),
-              child: GestureDetector(
-                onTap: () {
+              child: PopupMenuButton<String>(
 
-                },
-                child: PopupMenuButton<String>(
-
-                  icon: Align(
-                    alignment: isMe ? Alignment.centerRight: Alignment.centerLeft,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 5,horizontal: 10),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: isMe ? Radius.circular(10):Radius.zero,
-                          topRight:!isMe ? Radius.circular(10):Radius.zero,
-                          bottomLeft: Radius.circular(10),
-                          bottomRight: Radius.circular(10),
-                        ),
-
+                icon: Align(
+                  alignment: isMe ? Alignment.centerRight: Alignment.centerLeft,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 5,horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: isMe ? Radius.circular(10):Radius.zero,
+                        topRight:!isMe ? Radius.circular(10):Radius.zero,
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10),
                       ),
-                      child: Text(message['message'] ?? '',),
+
                     ),
+                    child: Text(message['message'] ?? '',),
                   ),
-                  onSelected: (value) async{
-                    if(value== 'delete') {
-                       final result = await database.child("conversation").child(chatId).child(message["key"]).child("delete").child(uid1).set(true);
-                    }
-                  },
-                  itemBuilder: (context) =>  <PopupMenuEntry<String>>[
-                    const PopupMenuItem<String>(value: 'delete',child: Text("Delete"),),
-                  ],),
-              ),
+                ),
+                onSelected: (value) async{
+                  if(value== 'delete') {
+                     final result = await database.child("conversation").child(chatId).child(message["key"]).child("delete").child(uid1).set(true);
+                  }
+                },
+                itemBuilder: (context) =>  <PopupMenuEntry<String>>[
+                  const PopupMenuItem<String>(value: 'delete',child: Text("Delete"),),
+                ],),
             );
           },);
 
@@ -133,6 +130,13 @@ class _ChatPageState extends State<ChatPage> {
            Expanded(
              child: TextField(
                maxLines: 1,
+               onChanged: (value) {
+                 if(value.isNotEmpty){
+                   _sendController.status.value = true;
+                 }else{
+                   _sendController.status.value = false;
+                 }
+               },
                controller: _controller,
                decoration:const InputDecoration(
                  hintText: "Type here...",
@@ -143,19 +147,19 @@ class _ChatPageState extends State<ChatPage> {
            ),
            GestureDetector(
 
-             onTap: () async {
+             onTap: _sendController.status.value ?() async {
                if(_controller.text.isNotEmpty){
 
                  sendMessage(uid1: uid1, uid2: args["user"]["uid"], chatId: chatId, message: _controller.text.trim());
                  _controller.clear();
                }
-             },
+             }: null,
              child: Container(
                  height: 50,
                  width: 50,
                  decoration: BoxDecoration(
                    borderRadius: BorderRadius.circular(50),
-                   color: Colors.grey.shade500
+                   color: _sendController.status.value ? Colors.blue:Colors.grey.shade500
                  ),
                  child: const Icon(Icons.send, color: Colors.white,)),
            )
