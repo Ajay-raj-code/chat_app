@@ -65,8 +65,8 @@ Widget customPassword({required TextEditingController controller, required bool 
     obscureText: obscure,
     decoration: InputDecoration(
       hintText: title.toLowerCase(),
-      label: Text(title, style: TextStyle(color: Colors.black),),
-        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 20),
+      label: Text(title, style: const TextStyle(color: Colors.black),),
+        contentPadding:const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
       border: ConstantStyles.border,
       focusedBorder: ConstantStyles.focusedBorder,
       errorBorder: ConstantStyles.errorBorder,

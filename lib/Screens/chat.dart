@@ -19,6 +19,15 @@ class _ChatPageState extends State<ChatPage> {
   final TextEditingController _controller = TextEditingController();
   late String chatId;
   final database = FirebaseDatabase.instance.ref();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _controller.dispose();
+
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -42,9 +51,9 @@ class _ChatPageState extends State<ChatPage> {
                 borderRadius: BorderRadius.circular(50),
 
               ),
-              child: Icon(Icons.person, color: Colors.white,size: 35,),
+              child:const Icon(Icons.person, color: Colors.white,size: 35,),
             ),
-            Text(args["user"]["username"], style: TextStyle( fontWeight: FontWeight.bold),),
+            Text(args["user"]["username"], style:const TextStyle( fontWeight: FontWeight.bold),),
           ],
 
         ),
@@ -54,11 +63,11 @@ class _ChatPageState extends State<ChatPage> {
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
         child: StreamBuilder(stream: database.child("conversation").child(chatId).onValue, builder: (context, snapshot) {
           if(!snapshot.hasData){
-            return SizedBox();
+            return const Center(child: CircularProgressIndicator(),);
           }
           final messagesMap = snapshot.data!.snapshot.value as Map<dynamic, dynamic>?;
           if(messagesMap == null){
-            return Center(child: Text("No Chat Available"),);
+            return const Center(child: Text("No Chat Available"),);
           }
 
           final messages = messagesMap.entries .where((e) {
@@ -86,7 +95,7 @@ class _ChatPageState extends State<ChatPage> {
                   icon: Align(
                     alignment: isMe ? Alignment.centerRight: Alignment.centerLeft,
                     child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 5,horizontal: 10),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.only(
@@ -117,7 +126,7 @@ class _ChatPageState extends State<ChatPage> {
 
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: Container(
-        padding: EdgeInsets.only(left: 10),
+        padding: const EdgeInsets.only(left: 10),
 
         child: Row(
          children: [
@@ -125,7 +134,7 @@ class _ChatPageState extends State<ChatPage> {
              child: TextField(
                maxLines: 1,
                controller: _controller,
-               decoration: InputDecoration(
+               decoration:const InputDecoration(
                  hintText: "Type here...",
                  border: OutlineInputBorder(borderSide: BorderSide.none),
                  focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
@@ -148,7 +157,7 @@ class _ChatPageState extends State<ChatPage> {
                    borderRadius: BorderRadius.circular(50),
                    color: Colors.grey.shade500
                  ),
-                 child: Icon(Icons.send, color: Colors.white,)),
+                 child: const Icon(Icons.send, color: Colors.white,)),
            )
          ],
         ),

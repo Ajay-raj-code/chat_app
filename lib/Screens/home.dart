@@ -46,12 +46,10 @@ class HomePage extends StatelessWidget{
           }
 
           final allChats = snapshot.data!.snapshot.value as Map<dynamic, dynamic>;
-          print(allChats["8VbCAeKBklWqNKTYMd4t72wgcgB2_frL6IJlW9qbMKEFBrhi7UwS0Adp2"]);
           List<Map<String, dynamic>> myChats= [];
           allChats.forEach((id, value) async {
             if(id.toString().contains(uid1)){
               final lastMessage = Map<String, dynamic>.from(value["lastMessage"] ?? {});
-              print(lastMessage);
               final otherUid = id.toString().split("_").first == id
                   ? id.toString().split("_")[0]
                   : id.toString().split("_")[1];
@@ -92,11 +90,11 @@ class HomePage extends StatelessWidget{
                         borderRadius: BorderRadius.circular(50),
 
                       ),
-                      child: Icon(Icons.person, color: Colors.white,size: 35,),
+                      child:const Icon(Icons.person, color: Colors.white,size: 35,),
                     ),
-                    title: Text(user["username"], style: TextStyle( fontWeight: FontWeight.bold),),
+                    title: Text(user["username"], style: const TextStyle( fontWeight: FontWeight.bold),),
                     subtitle: Text(myChats[index]["lastMessage"]["text"] ?? "", style: TextStyle(color: Colors.grey.shade500),),
-                    trailing: Text("Online", style: TextStyle(color: Colors.green),),
+                    trailing: Text("Online", style:const TextStyle(color: Colors.green),),
                   ),
                 );
               }
