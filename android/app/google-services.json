@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "56102480465",
+    "project_id": "demp-chat",
+    "storage_bucket": "demp-chat.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:56102480465:android:07089c88045b07e43fe670",
+        "android_client_info": {
+          "package_name": "com.example.chat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKbnKSz6nIXk-U07Xo2v6didYGH-AnFDQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
