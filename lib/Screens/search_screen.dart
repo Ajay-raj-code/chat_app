@@ -107,7 +107,7 @@ class SearchScreen extends StatelessWidget {
                     ? const Text("No User found")
                     : ListTile(
                         onTap: () {
-                          Get.toNamed(
+                          Get.offNamed(
                             "/chat",
                             arguments: {
                               "user": searchListController.searchResult,

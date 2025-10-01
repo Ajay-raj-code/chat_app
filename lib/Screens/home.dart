@@ -29,7 +29,7 @@ class HomePage extends StatelessWidget{
               }
               else if(value == 'logout'){
                 Authentication().signOut();
-                Get.toNamed('/login');
+                Get.offAllNamed('/login');
               }
             },
             itemBuilder: (context) => <PopupMenuEntry<String>>[

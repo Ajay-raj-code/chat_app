@@ -59,7 +59,7 @@ top:  false,
                 if(_formKey.currentState!.validate()){
                   bool auth = await Authentication().loginWithEmail(email: _emailController.text.trim(), password: _passwordController.text.trim());
                   if(auth){
-                    Get.toNamed('/');
+                    Get.offNamed('/');
                   }else{
                     Get.snackbar("Login", "Check your email and password");
                   }
@@ -73,7 +73,7 @@ top:  false,
                  const Text("I don't have an account?"),
                  GestureDetector(
                  onTap: () {
-                   Get.toNamed("/registration");
+                   Get.offNamed("/registration");
                  }
 
                  ,child: const Text("Registration", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),))

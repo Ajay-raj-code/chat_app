@@ -80,7 +80,7 @@ class _RegistrationState extends State<Registration> {
                  if(_passwordController.text.trim() == _confirmPasswordController.text.trim()){
                    bool auth = await Authentication().registration(email: _emailController.text.trim(), password: _passwordController.text.trim(), mobileNumber: _mobileNumberController.text.trim(), name: _nameController.text.trim().toUpperCase());
                    if(auth){
-                     Get.toNamed("/");
+                     Get.offNamed("/");
                    }else{
                      Get.snackbar("Registration", "Please check your email or password\nif you have already created account then go to login page");
                    }
@@ -97,7 +97,7 @@ class _RegistrationState extends State<Registration> {
                   const Text("I have account?"),
                   GestureDetector(
                     onTap: () {
-                      Get.toNamed("/login");
+                      Get.offNamed("/login");
                     },
                     child: const Text("Login", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),),
                   ),
