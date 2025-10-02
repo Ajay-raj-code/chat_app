@@ -16,6 +16,7 @@ void main() async {
 }
 String route() {
   if(Authentication().user != null){
+    Authentication().AddObserver();
     return "/";
   }else{
     return "/login";

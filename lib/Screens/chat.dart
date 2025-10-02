@@ -55,7 +55,52 @@ class _ChatPageState extends State<ChatPage> {
               ),
               child:const Icon(Icons.person, color: Colors.white,size: 35,),
             ),
-            Text(args["user"]["username"], style:const TextStyle( fontWeight: FontWeight.bold),),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(args["user"]["username"], style:const TextStyle( fontWeight: FontWeight.bold),),
+                StreamBuilder(
+                  stream: database
+                      .child("users")
+                      .child(args["user"]["uid"])
+                      .onValue,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return const Text("");
+                    }
+
+                    if (!snapshot.hasData ||
+                        snapshot.data?.snapshot.value == null) {
+                      return const Text("Offline");
+                    }
+
+                    final data =
+                    (snapshot.data!).snapshot.value
+                    as Map<dynamic, dynamic>;
+
+                    final bool isOnline = data["isOnline"] ?? false;
+                    final int lastSeen = data["lastSeen"] ?? 10;
+
+                    if (isOnline) {
+                      return const Text(
+                        "Online",
+                        style: TextStyle(
+                          color: Colors.green,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    } else {
+                      return Text(
+                        convertTime(time: lastSeen),
+                        style: const TextStyle(fontSize: 10,color: Colors.grey),
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
           ],
 
         ),
@@ -95,7 +140,7 @@ class _ChatPageState extends State<ChatPage> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 5,horizontal: 10),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: isMe ?Colors.blue:Colors.white,
                       borderRadius: BorderRadius.only(
                         topLeft: isMe ? Radius.circular(10):Radius.zero,
                         topRight:!isMe ? Radius.circular(10):Radius.zero,
@@ -104,7 +149,7 @@ class _ChatPageState extends State<ChatPage> {
                       ),
 
                     ),
-                    child: Text(message['message'] ?? '',),
+                    child: Text(message['message'] ?? '', style: TextStyle(color: isMe?Colors.white:Colors.black),),
                   ),
                 ),
                 onSelected: (value) async{
@@ -145,23 +190,24 @@ class _ChatPageState extends State<ChatPage> {
                ),
              ),
            ),
-           GestureDetector(
+           Obx(() => GestureDetector(
 
-             onTap: _sendController.status.value ?() async {
-               if(_controller.text.isNotEmpty){
+               onTap: _sendController.status.value ?() async {
+                 if(_controller.text.isNotEmpty){
 
-                 sendMessage(uid1: uid1, uid2: args["user"]["uid"], chatId: chatId, message: _controller.text.trim());
-                 _controller.clear();
-               }
-             }: null,
-             child: Container(
-                 height: 50,
-                 width: 50,
-                 decoration: BoxDecoration(
-                   borderRadius: BorderRadius.circular(50),
-                   color: _sendController.status.value ? Colors.blue:Colors.grey.shade500
-                 ),
-                 child: const Icon(Icons.send, color: Colors.white,)),
+                   sendMessage(uid1: uid1, uid2: args["user"]["uid"], chatId: chatId, message: _controller.text.trim());
+                   _controller.clear();
+                   _sendController.status.value =false;
+                 }
+               }: null,
+               child: Container(
+                   height: 50,
+                   width: 50,
+                   decoration: BoxDecoration(
+                       borderRadius: BorderRadius.circular(50),
+                       color: _sendController.status.value ? Colors.blue:Colors.grey.shade500
+                   ),
+                   child: const Icon(Icons.send, color: Colors.white,)),),
            )
          ],
         ),

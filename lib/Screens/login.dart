@@ -61,6 +61,8 @@ top:  false,
                 if(_formKey.currentState!.validate()){
                   bool auth = await Authentication().loginWithEmail(email: _emailController.text.trim(), password: _passwordController.text.trim());
                   if(auth){
+                    Authentication().AddObserver();
+
                     Get.offNamed('/');
                   }else{
                     Get.snackbar("Login", "Check your email and password");
