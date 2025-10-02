@@ -119,18 +119,18 @@ class _ChatPageState extends State<ChatPage> {
 
           final messages = messagesMap.entries .where((e) {
             final msg = Map<String, dynamic>.from(e.value);
-            return msg['delete'] == null || msg['delete'][uid1] != true;
+            return (msg['delete'] == null || msg['delete'][uid1] != true) && (msg['text']  == null);
           }).map((e) {
             final msg = Map<String, dynamic>.from(e.value);
             msg['key'] = e.key;
 
             return msg;
-          },).toList();
+          },).toList(growable: false);
 
-          messages.sort((a, b) => (b['timestamp'] ?? 0).compareTo(a['timestamp'] ?? 0));
-          return ListView.builder(itemCount: messages.length-1,itemBuilder: (context, index) {
-            final message = messages[messages.length - 1 - index]; // newest at bottom
-            final isMe = message['senderId'] == uid1;
+          messages.sort((a, b) => (a['timestamp'] ?? 0).compareTo(b['timestamp'] ?? 0));
+          return ListView.builder(itemCount: messages.length,itemBuilder: (context, index) {
+            final message = messages[index];
+            final isMe = messages[index]['senderId'] == uid1;
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 5),
               child: PopupMenuButton<String>(
@@ -153,7 +153,15 @@ class _ChatPageState extends State<ChatPage> {
                   ),
                 ),
                 onSelected: (value) async{
+
                   if(value== 'delete') {
+                    if(index == messages.length -1){
+                      await database.child("conversation").child(chatId).child("lastMessage").update({
+                        "senderId": messages[index-1]["senderId"],
+                        "text": messages[index-1]["message"],
+                        "timestamp": messages[index-1]["timestamp"],
+                      });
+                    }
                      final result = await database.child("conversation").child(chatId).child(message["key"]).child("delete").child(uid1).set(true);
                   }
                 },

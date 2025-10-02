@@ -6,6 +6,7 @@ String generateChatId({required String uid1,required String uid2}){
 }
 
 String convertTime({required int time}){
-  DateTime date = DateTime.fromMillisecondsSinceEpoch(time, isUtc: true).toLocal();
+  final DateTime date = DateTime.fromMillisecondsSinceEpoch(time, isUtc: true).toLocal();
+
   return DateFormat('hh:mm a').format(date).toString();
 }

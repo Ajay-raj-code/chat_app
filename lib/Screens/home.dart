@@ -2,7 +2,6 @@ import 'package:chat/Database/authentication.dart';
 import 'package:chat/Utils/helper.dart';
 import 'package:chat/Utils/widgets.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -47,7 +46,7 @@ class HomePage extends StatelessWidget {
           ],
         ),
         body: Padding(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           child: StreamBuilder(
             stream: database.child("conversation").onValue,
             builder: (context, snapshot) {
